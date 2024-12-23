@@ -77,7 +77,7 @@ async function main() {
 	let failures = 0;
 	for (const [group, bucket] of groups) {
 		const mirrored = await getAI(bucket);
-		console.log(`Mirroring ${bucket}: ${mirrored.size}`);
+		console.log(`Mirrored ${bucket}: ${mirrored.size}`);
 
 		for await (const pkg of manager.packages()) {
 			// Skip the child package for now.
