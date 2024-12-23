@@ -104,10 +104,12 @@ async function main() {
 			}
 
 			if (mirrored.has(pkg.sha256)) {
+				console.log('Skip: Mirrored');
 				continue;
 			}
 
 			if (await exists(bucket, path)) {
+				console.log('Skip: Exists');
 				continue;
 			}
 
