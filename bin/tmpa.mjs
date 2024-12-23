@@ -23,6 +23,25 @@ function suff() {
 	return new Date().toISOString().replace(/(-|T.*)/g, '');
 }
 
+async function getAI(bucket) {
+	const url = `https://archive.org/metadata/${bucket}/`;
+	const res = await fetch(url);
+	if (res.status !== 200) {
+		throw new Error(`Bad status: ${res.status}`);
+	}
+	const json = await res.json();
+	const r = new Map();
+	if (json && json.files) {
+		for (const f of json.files) {
+			const path = f.name.split('/');
+			if (path.length === 2 && /^[0-9a-f]{64}$/.test(path[0])) {
+				r.set(path[0], path[1]);
+			}
+		}
+	}
+	return r;
+}
+
 async function main() {
 	const args = process.argv.slice(2);
 
@@ -57,6 +76,9 @@ async function main() {
 
 	let failures = 0;
 	for (const [group, bucket] of groups) {
+		const mirrored = await getAI(bucket);
+		console.log(`Mirroring ${bucket}: ${mirrored.size}`);
+
 		for await (const pkg of manager.packages()) {
 			// Skip the child package for now.
 			if (pkg.parent) {
@@ -68,6 +90,10 @@ async function main() {
 				pkg.name !== group &&
 				!pkg.name.startsWith(`${group}-`)
 			) {
+				continue;
+			}
+
+			if (mirrored.has(pkg.sha256)) {
 				continue;
 			}
 
