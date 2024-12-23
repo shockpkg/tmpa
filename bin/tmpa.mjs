@@ -107,7 +107,7 @@ async function main() {
 				continue;
 			}
 
-			if (await exists(bucket, pkg.sha256)) {
+			if (await exists(bucket, path)) {
 				continue;
 			}
 
