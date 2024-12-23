@@ -98,7 +98,8 @@ async function main() {
 			// Only those in group.
 			if (
 				pkg.name !== group &&
-				!pkg.name.startsWith(`${group}-`)
+				!pkg.name.startsWith(`${group}-`) &&
+				!pkg.name.startsWith(`${group}.`)
 			) {
 				continue;
 			}
