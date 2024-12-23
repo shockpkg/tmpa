@@ -88,6 +88,8 @@ async function main() {
 		console.log(`Mirrored ${bucket}: ${mirrored.size}`);
 
 		for await (const pkg of manager.packages()) {
+			const path = `${pkg.sha256}/${pkg.file}`;
+
 			// Skip the child package for now.
 			if (pkg.parent) {
 				continue;
@@ -105,6 +107,10 @@ async function main() {
 				continue;
 			}
 
+			if (await exists(bucket, pkg.sha256)) {
+				continue;
+			}
+
 			// Remap hack:
 			for (const c of chars) {
 				const BUCKET = process.env[`BUCKET_${c.toUpperCase()}`];
@@ -118,7 +124,6 @@ async function main() {
 			}
 
 			console.log(pkg.name);
-			const path = `${pkg.sha256}/${pkg.file}`;
 			console.log(`${bucket}/${path}`);
 			console.log('Downloading:');
 			try {
