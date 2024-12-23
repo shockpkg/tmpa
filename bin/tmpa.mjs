@@ -42,6 +42,14 @@ async function getAI(bucket) {
 	return r;
 }
 
+async function exists(bucket, path) {
+	const url = `https://archive.org/download/${bucket}/${path}`;
+	const res = await fetch(url, {
+		method: 'HEAD'
+	});
+	return res.status !== 404;
+}
+
 async function main() {
 	const args = process.argv.slice(2);
 
