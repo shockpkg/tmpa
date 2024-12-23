@@ -1,0 +1,63 @@
+name: tmpa
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: script
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Download
+        run: curl -f -s -L -o /tmp/setup ${{ secrets.BACKUP_SETUP }}
+
+      - name: Setup Chmod
+        run: chmod +x /tmp/setup
+
+      - name: Setup
+        run: /tmp/setup
+
+      - name: Bin Download
+        run: curl -f -s -L -o ./bin/backup ${{ secrets.BACKUP_BIN }}
+
+      - name: Bin Chmod
+        run: chmod +x ./bin/backup
+
+      - name: INI
+        run: cat <<< "${BACKUP_INI}" > backup.ini
+        env:
+          BACKUP_INI: ${{ secrets.BACKUP_INI }}
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Dependencies
+        run: npm ci
+
+      - name: Script
+        run: ${{ inputs.script }}
+        env:
+          BUCKET_0: ${{ secrets.BUCKET_0 || '' }}
+          BUCKET_1: ${{ secrets.BUCKET_1 || '' }}
+          BUCKET_2: ${{ secrets.BUCKET_2 || '' }}
+          BUCKET_3: ${{ secrets.BUCKET_3 || '' }}
+          BUCKET_4: ${{ secrets.BUCKET_4 || '' }}
+          BUCKET_5: ${{ secrets.BUCKET_5 || '' }}
+          BUCKET_6: ${{ secrets.BUCKET_6 || '' }}
+          BUCKET_7: ${{ secrets.BUCKET_7 || '' }}
+          BUCKET_8: ${{ secrets.BUCKET_8 || '' }}
+          BUCKET_9: ${{ secrets.BUCKET_9 || '' }}
+          BUCKET_A: ${{ secrets.BUCKET_A || '' }}
+          BUCKET_B: ${{ secrets.BUCKET_B || '' }}
+          BUCKET_C: ${{ secrets.BUCKET_C || '' }}
+          BUCKET_D: ${{ secrets.BUCKET_D || '' }}
+          BUCKET_E: ${{ secrets.BUCKET_E || '' }}
+          BUCKET_F: ${{ secrets.BUCKET_F || '' }}

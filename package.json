@@ -1,0 +1,6 @@
+{
+	"private": true,
+	"dependencies": {
+		"@shockpkg/core": "^3.0.8"
+	}
+}
