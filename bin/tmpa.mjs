@@ -63,6 +63,10 @@ async function main() {
 				continue;
 			}
 
+			if (!pkg.sha256.startsWith('8')) {
+				continue;
+			}
+
 			// Only those in group.
 			if (
 				pkg.name !== group &&
